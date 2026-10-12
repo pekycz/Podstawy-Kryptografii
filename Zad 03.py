@@ -88,3 +88,6 @@ def wydajnosc():
 # Przesunięto do lewej krawędzi (bez wcięć)
 if __name__ == "__main__":
     wydajnosc()
+
+# Wnioski - Najszybsze są ECB i CTR, CBC jest szybsze przy odszyfrowywaniu, najwolniejsze jest CFB,
+# Skrypt działa poprawnie ponieważ czas rośnie proporcjonalnie do rozmiaru pliku (x10)
