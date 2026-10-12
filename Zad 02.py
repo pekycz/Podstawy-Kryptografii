@@ -19,6 +19,11 @@ def szyfrowanie_des(klucz: bytes, jawnyTekst: bytes) -> bytes:
     cipher = DES.new(klucz, DES.MODE_ECB)
     return cipher.encrypt(jawnyTekst)
 
+def hamming(x: bytes, y: bytes) -> int:
+    if len(x) != len(y):
+        raise ValueError("łańcuchy muszą mieć tą samą długość")
+    return sum((b1 ^ b2).bit_count() for b1, b2 in zip(x,y))
+
 if __name__ == "__main__":
     ## Weryfikacja dzialania funkcji pomocniczych
     aes_klucz = b'SekretnyKluczAES'
@@ -32,3 +37,7 @@ if __name__ == "__main__":
 
     des_ciphertext = szyfrowanie_des(des_klucz, des_jawnyTekst)
     print(f"DES (ECB) Szyfrogram (HEX):     {binascii.hexlify(des_ciphertext).decode('utf-8')}")
+
+    x = b'\x0F' # 00001111
+    y = b'\xFF' # 11111111
+    print(f"Odległość (hamming): {hamming(x, y)}")
