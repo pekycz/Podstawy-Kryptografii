@@ -47,6 +47,8 @@ if __name__ == "__main__":
 
     odleglosci_aes = []
 
+    # Zmiana tekstu jawnego
+
     for i in range(128):
         zmienionyTekst = bytearray(aes_tekst)
         byte_index = i // 8
@@ -63,4 +65,66 @@ if __name__ == "__main__":
     min_aes = min(odleglosci_aes)
     max_aes = max(odleglosci_aes)
 
-    print(f"Średnia: {srednia_aes}, Minimalna: {min_aes}, Maksymalna: {max_aes}")
+    des_klucz = b'KluczDES'
+    des_tekst = b'\x00' * 8
+    des_zaszyfrowanyTekst = szyfrowanie_des(des_klucz,des_tekst)
+    odleglosci_des = []
+    for i in range(64):
+        zmienionyTekst = bytearray(des_tekst)
+        byte_index = i // 8
+        bit_index = i % 8
+
+        zmienionyTekst[byte_index] ^= (1 << bit_index) #XOR naklada przesuniety bit na tekst
+        nowyTekst = bytes(zmienionyTekst)
+        nowyZaszyfrowany = szyfrowanie_des(des_klucz, nowyTekst)
+
+        dist = hamming(des_zaszyfrowanyTekst, nowyZaszyfrowany)
+        odleglosci_des.append(dist)
+
+    srednia_des = sum(odleglosci_des) / len(odleglosci_des)
+    min_des = min(odleglosci_des)
+    max_des = max(odleglosci_des)
+
+    print("Zmienianie tekstu jawnego: ")
+    print(f"AES: Średnia: {srednia_aes}, Minimalna: {min_aes}, Maksymalna: {max_aes}")
+    print(f"DES: Średnia: {srednia_des}, Minimalna: {min_des}, Maksymalna: {max_des}\n")
+
+    # Zmiana klucza
+    odleglosci_aes1 = []
+    for i in range(128):
+        zmienionyKlucz = bytearray(aes_klucz)
+        byte_index = i // 8
+        bit_index = i % 8
+
+        zmienionyKlucz[byte_index] ^= (1 << bit_index)
+        nowyZaszyfrowany = szyfrowanie_aes(zmienionyKlucz, aes_tekst)
+
+        dist = hamming(aes_zaszyfrowanyTekst, nowyZaszyfrowany)
+        odleglosci_aes1.append(dist)
+
+    srednia_aes1 = sum(odleglosci_aes1) / len(odleglosci_aes1)
+    min_aes1 = min(odleglosci_aes1)
+    max_aes1 = max(odleglosci_aes1)
+
+    odleglosci_des1 = []
+    for i in range(64):
+        zmienionyKlucz = bytearray(des_klucz)
+        byte_index = i // 8
+        bit_index = i % 8
+
+        zmienionyKlucz[byte_index] ^= (1 << bit_index)
+        nowyZaszyfrowany = szyfrowanie_des(zmienionyKlucz, des_tekst)
+
+        dist = hamming(des_zaszyfrowanyTekst, nowyZaszyfrowany)
+        odleglosci_des1.append(dist)
+
+    srednia_des1 = sum(odleglosci_des1) / len(odleglosci_des1)
+    min_des1 = min(odleglosci_des1)
+    max_des1 = max(odleglosci_des1)
+
+    print("Zmienianie Klucza: ")
+    print(f"AES: Średnia: {srednia_aes1}, Minimalna: {min_aes1}, Maksymalna: {max_aes1}")
+    print(f"DES: Średnia: {srednia_des1}, Minimalna: {min_des1}, Maksymalna: {max_des1}")
+
+    #Minimalna w DES == 0, jest spowodowana co 8-mym tzw. bitem parzystości ktory jest całkowicie ignorowany przy szyfrowaniu - (wyjasnienie gemini)
+    #Wyniki są poprawne ponieważ oczekiwana wartość hamminga to 50% czyli dla AES to 128 x 0.5 = 64 bity, dla DES jest to 32 bity
