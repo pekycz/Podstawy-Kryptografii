@@ -1,8 +1,6 @@
-from codecs import make_identity_dict
-
 from Cryptodome.Cipher import AES, DES
 import binascii
-
+#pip install pycryptodomex
 def szyfrowanie_aes(klucz: bytes, jawnyTekst: bytes) -> bytes:
     if len(klucz) != 16:
         raise ValueError("Klucz musi mieć dokładnie 16 bajtów")
@@ -126,5 +124,5 @@ if __name__ == "__main__":
     print(f"AES: Średnia: {srednia_aes1}, Minimalna: {min_aes1}, Maksymalna: {max_aes1}")
     print(f"DES: Średnia: {srednia_des1}, Minimalna: {min_des1}, Maksymalna: {max_des1}")
 
-    #Minimalna w DES == 0, jest spowodowana co 8-mym tzw. bitem parzystości ktory jest całkowicie ignorowany przy szyfrowaniu - (wyjasnienie gemini)
-    #Wyniki są poprawne ponieważ oczekiwana wartość hamminga to 50% czyli dla AES to 128 x 0.5 = 64 bity, dla DES jest to 32 bity
+# Minimalna w DES == 0, jest spowodowana co 8-mym tzw. bitem parzystości ktory jest całkowicie ignorowany przy szyfrowaniu - (wyjasnienie gemini)
+# Wyniki są poprawne ponieważ oczekiwana wartość hamminga to 50% czyli dla AES to 128 x 0.5 = 64 bity, dla DES jest to 32 bity
