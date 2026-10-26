@@ -3,23 +3,3 @@
 ## Uruchomienie
 
 Wymagany jest Python 3.10 lub nowszy.
-
-W katalogu repozytorium utwĂłrz i aktywuj Ĺ›rodowisko, a nastÄ™pnie zainstaluj
-zaleĹĽnoĹ›ci:
-
-```powershell
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-```
-
-Uruchamianie zadaĹ„:
-
-```powershell
-python "Zad 02.py"
-python "Zad 03.py"
-python Zad_04\1.py
-```
-
-Zadanie 03 generuje lokalnie pliki testowe o rozmiarach 1 MB, 10 MB i 100 MB.
-SÄ… one ignorowane przez Git.
