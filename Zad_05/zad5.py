@@ -63,5 +63,35 @@ def wymiana_dh() -> None:
     print(f"Sekrety są takie same: {sekret_a == sekret_b}")
 
 
+def symuluj_mitm() -> None:
+    # Bez uwierzytelnienia A i B nie wiedzą, kto wysłał otrzymaną wartość.
+    klucz_a = generuj_klucz_prywatny()
+    klucz_b = generuj_klucz_prywatny()
+    klucz_e = generuj_klucz_prywatny()
+    publiczny_a = oblicz_klucz_publiczny(klucz_a)
+    publiczny_b = oblicz_klucz_publiczny(klucz_b)
+    publiczny_e = oblicz_klucz_publiczny(klucz_e)
+
+    # E przechwytuje X i Y, po czym zamiast nich wysyła A i B własne Z.
+    sekret_a = oblicz_sekret(publiczny_e, klucz_a)
+    sekret_b = oblicz_sekret(publiczny_e, klucz_b)
+
+    # E oblicza osobny sekret z każdą stroną, używając przechwyconych wartości.
+    sekret_e_a = oblicz_sekret(publiczny_a, klucz_e)
+    sekret_e_b = oblicz_sekret(publiczny_b, klucz_e)
+
+    assert sekret_a == sekret_e_a
+    assert sekret_b == sekret_e_b
+
+    print("\nSymulacja ataku Man-in-the-Middle")
+    print(f"E podmienia wartości publiczne A i B na Z: {publiczny_e:x}")
+    print(f"A i E mają ten sam sekret: {sekret_a == sekret_e_a}")
+    print(f"B i E mają ten sam sekret: {sekret_b == sekret_e_b}")
+    print(f"A i B mają ten sam sekret: {sekret_a == sekret_b}")
+    pokaz_sekret("Sekret współdzielony przez A i E", sekret_e_a)
+    pokaz_sekret("Sekret współdzielony przez B i E", sekret_e_b)
+
+
 if __name__ == "__main__":
     wymiana_dh()
+    symuluj_mitm()
