@@ -22,17 +22,17 @@ G = 11
 
 
 def generuj_klucz_prywatny() -> int:
-    """Losuje prywatny wykładnik z zakresu od 2 do N-2."""
+    #Losuje prywatny wykładnik z zakresu od 2 do N-2.
     return secrets.randbelow(N - 3) + 2
 
 
 def oblicz_klucz_publiczny(klucz_prywatny: int) -> int:
-    """Oblicza G^klucz_prywatny modulo N."""
+    #Oblicza G^klucz_prywatny modulo N.
     return pow(G, klucz_prywatny, N)
 
 
 def oblicz_sekret(wartosc_publiczna: int, klucz_prywatny: int) -> int:
-    """Oblicza wspólną wartość po otrzymaniu klucza publicznego drugiej strony."""
+    #Oblicza wspólną wartość po otrzymaniu klucza publicznego drugiej strony.
     return pow(wartosc_publiczna, klucz_prywatny, N)
 
 
