@@ -44,7 +44,7 @@ def generuj_liczbe_pierwsza(liczba_bitow: int) -> int:
     """Generuje nieparzystą liczbę o wskazanej długości bitowej."""
     while True:
         kandydat = secrets.randbits(liczba_bitow)
-        kandydat |= (1 << (liczba_bitow - 1)) | 1
+        kandydat |= (1 << (liczba_bitow - 1)) | 1 #dwa bity ustawione na 1, aby zapewnić odpowiednią długość i nieparzystość
         if czy_prawdopodobnie_pierwsza(kandydat):
             return kandydat
 
