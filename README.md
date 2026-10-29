@@ -1,3 +1,1 @@
 # Podstawy kryptografii
-
-## Uruchomienie
