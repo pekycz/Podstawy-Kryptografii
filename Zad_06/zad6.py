@@ -45,7 +45,7 @@ def generuj_liczbe_pierwsza(liczba_bitow):
 
 
 def generuj_klucze() -> tuple[tuple[int, int], tuple[int, int]]:
-    """Zwraca klucz publiczny (N, e) i prywatny (N, d)."""
+    #Zwraca klucz publiczny (N, e) i prywatny (N, d).
     while True:
         p = generuj_liczbe_pierwsza(ROZMIAR_PRIME_BITS)
         q = generuj_liczbe_pierwsza(ROZMIAR_PRIME_BITS)
@@ -63,37 +63,24 @@ def generuj_klucze() -> tuple[tuple[int, int], tuple[int, int]]:
 
 
 def szyfruj(wiadomosc: int, klucz_publiczny: tuple[int, int]):
-    """Szyfruje nieujemną liczbę mniejszą od N bez paddingu (wariant edukacyjny)."""
+    #Szyfruje nieujemną liczbę mniejszą od N.
     n, e = klucz_publiczny
-    if not 0 <= wiadomosc < n:
-        raise ValueError("Wiadomość musi być liczbą z zakresu 0 <= M < N.")
     return pow(wiadomosc, e, n)
 
 
 def deszyfruj(szyfrogram: int, klucz_prywatny: tuple[int, int]):
-    """Odszyfrowuje szyfrogram mniejszy od N (wariant edukacyjny bez paddingu)."""
+    #Odszyfrowuje szyfrogram mniejszy od N
     n, d = klucz_prywatny
-    if not 0 <= szyfrogram < n:
-        raise ValueError("Szyfrogram musi być liczbą z zakresu 0 <= C < N.")
     return pow(szyfrogram, d, n)
 
 
 def generuj_bity_rsa(
-    klucz_publiczny: tuple[int, int],
-    liczba_bitow: int,
-    ziarno: int | None = None,
-) -> Iterator[int]:
-    """Zwraca najmłodszy bit kolejnych stanów generatora RSA."""
+    klucz_publiczny: tuple[int, int], liczba_bitow: int, ziarno: int | None = None,) -> Iterator[int]:
+    #Zwraca najmłodszy bit kolejnych stanów generatora RSA.
     n, e = klucz_publiczny
-    if n <= 3 or e <= 0:
-        raise ValueError("Nieprawidłowy klucz publiczny.")
-    if liczba_bitow < 0:
-        raise ValueError("Liczba bitów nie może być ujemna.")
     if ziarno is None:
         ziarno = secrets.randbelow(n - 2) + 2
-    if not 1 < ziarno < n:
-        raise ValueError("Ziarno musi spełniać warunek 1 < x0 < N.")
-
+        
     stan = ziarno
     for _ in range(liczba_bitow):
         stan = pow(stan, e, n)
@@ -103,7 +90,7 @@ def generuj_bity_rsa(
 def main() -> None:
     klucz_publiczny, klucz_prywatny = generuj_klucze()
     n, e = klucz_publiczny
-    wiadomosc = "Ala ma kota".encode("utf-8")
+    wiadomosc = "AaAaAla ma kota".encode("utf-8")
     liczba_jawna = int.from_bytes(wiadomosc, "big")
     szyfrogram = szyfruj(liczba_jawna, klucz_publiczny)
     odszyfrowana = deszyfruj(szyfrogram, klucz_prywatny)
