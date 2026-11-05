@@ -4,29 +4,26 @@ from collections.abc import Iterator
 
 
 ROZMIAR_PRIME_BITS = 1024
-LICZBA_RUND_MILLERA_RABINA = 40
+LICZBA_RUND = 40
 WYKLADNIK_PUBLICZNY = 65537
 
 
 def czy_prawdopodobnie_pierwsza(liczba: int) -> bool:
     """Testuje pierwszość liczby testem Millera-Rabina."""
-    male_pierwsze = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)
     if liczba < 2:
         return False
-    if liczba in male_pierwsze:
+    if liczba in (2, 3):
         return True
-    if any(liczba % dzielnik == 0 for dzielnik in male_pierwsze):
+    if liczba % 2 == 0:
         return False
 
-    # Rozkładamy liczba - 1 na 2^s * d, gdzie d jest nieparzyste.
     d = liczba - 1
     s = 0
     while d % 2 == 0:
         s += 1
         d //= 2
 
-    # Losowe podstawy testu zmniejszają prawdopodobieństwo błędnej klasyfikacji.
-    for _ in range(LICZBA_RUND_MILLERA_RABINA):
+    for _ in range(LICZBA_RUND):
         podstawa = secrets.randbelow(liczba - 3) + 2
         wynik = pow(podstawa, d, liczba)
         if wynik in (1, liczba - 1):
@@ -117,7 +114,7 @@ def main() -> None:
     # Generator jest pokazany edukacyjnie; nie należy używać go do prawdziwych kluczy.
     ciag_bitow = "".join(str(bit) for bit in generuj_bity_rsa(klucz_publiczny, 64))
 
-    print("RSA — demonstracja")
+    print("RSA:")
     print(f"Długość N: {n.bit_length()} bitów")
     print(f"Wykładnik publiczny e: {e}")
     print(f"Wiadomość: {wiadomosc.decode('utf-8')}")

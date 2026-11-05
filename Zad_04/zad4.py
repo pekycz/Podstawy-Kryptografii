@@ -22,7 +22,6 @@ def porownaj_czasy():
             print(
                 f"{metoda:9} {skrot}  "
                 f"{czas * 1000:.3f} ms  "
-                f"({czas * 1000000 / powtorzenia:.3f} µs na obliczenie)"
             )
 
 
@@ -81,7 +80,7 @@ def znajdz_kolizje(liczba_bitow):
             print(f"Wiadomość 1: {znalezione_skroty[skrot_czesciowy].decode('utf-8')}")
             print(f"Wiadomość 2: {wiadomosc.decode('utf-8')}")
             print(f"Wspólny początek skrótu: {skrot_czesciowy.hex()}")
-            print(f"Oczekiwana liczba prób (paradoks urodzin): około 2^{liczba_bitow // 2}")
+            print(f"Oczekiwana liczba prób (paradoks urodzin): około 2^{liczba_bitow // 2} = {2 ** (liczba_bitow // 2)}")
             return
 
         znalezione_skroty[skrot_czesciowy] = wiadomosc
