@@ -8,8 +8,7 @@ LICZBA_RUND = 40
 WYKLADNIK_PUBLICZNY = 65537
 
 
-def czy_prawdopodobnie_pierwsza(liczba: int) -> bool:
-    """Testuje pierwszość liczby testem Millera-Rabina."""
+def czy_prawdopodobnie_pierwsza(liczba):
     if liczba < 2:
         return False
     if liczba in (2, 3):
@@ -37,8 +36,7 @@ def czy_prawdopodobnie_pierwsza(liczba: int) -> bool:
     return True
 
 
-def generuj_liczbe_pierwsza(liczba_bitow: int) -> int:
-    """Generuje nieparzystą liczbę o wskazanej długości bitowej."""
+def generuj_liczbe_pierwsza(liczba_bitow):
     while True:
         kandydat = secrets.randbits(liczba_bitow)
         kandydat |= (1 << (liczba_bitow - 1)) | 1 #dwa bity ustawione na 1, aby zapewnić odpowiednią długość i nieparzystość
@@ -64,7 +62,7 @@ def generuj_klucze() -> tuple[tuple[int, int], tuple[int, int]]:
             return (n, e), (n, d)
 
 
-def szyfruj(wiadomosc: int, klucz_publiczny: tuple[int, int]) -> int:
+def szyfruj(wiadomosc: int, klucz_publiczny: tuple[int, int]):
     """Szyfruje nieujemną liczbę mniejszą od N bez paddingu (wariant edukacyjny)."""
     n, e = klucz_publiczny
     if not 0 <= wiadomosc < n:
@@ -72,7 +70,7 @@ def szyfruj(wiadomosc: int, klucz_publiczny: tuple[int, int]) -> int:
     return pow(wiadomosc, e, n)
 
 
-def deszyfruj(szyfrogram: int, klucz_prywatny: tuple[int, int]) -> int:
+def deszyfruj(szyfrogram: int, klucz_prywatny: tuple[int, int]):
     """Odszyfrowuje szyfrogram mniejszy od N (wariant edukacyjny bez paddingu)."""
     n, d = klucz_prywatny
     if not 0 <= szyfrogram < n:

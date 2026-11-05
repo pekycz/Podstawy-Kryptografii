@@ -4,52 +4,42 @@ import secrets
 
 
 ROZMIAR_BITOW_LICZBY_PIERWSZEJ = 1024
-LICZBA_RUND_MILLERA_RABINA = 40
 WYKLADNIK_PUBLICZNY = 65537
+LICZBA_RUND = 40
 
 
-def czy_prawdopodobnie_pierwsza(liczba: int) -> bool:
-    """Sprawdza pierwszość liczby testem Millera-Rabina."""
-    male_liczby_pierwsze = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)
+def czy_prawdopodobnie_pierwsza(liczba):
     if liczba < 2:
         return False
-    if liczba in male_liczby_pierwsze:
+    if liczba in (2, 3):
         return True
-    if any(liczba % dzielnik == 0 for dzielnik in male_liczby_pierwsze):
+    if liczba % 2 == 0:
         return False
 
-    # Rozkładamy liczba - 1 na 2^s * d, gdzie d jest nieparzyste.
     d = liczba - 1
     s = 0
     while d % 2 == 0:
         s += 1
         d //= 2
 
-    # Losowe podstawy ograniczają prawdopodobieństwo błędnego wyniku testu.
-    for _ in range(LICZBA_RUND_MILLERA_RABINA):
+    for _ in range(LICZBA_RUND):
         podstawa = secrets.randbelow(liczba - 3) + 2
         wynik = pow(podstawa, d, liczba)
         if wynik in (1, liczba - 1):
             continue
-
         for _ in range(s - 1):
             wynik = pow(wynik, 2, liczba)
             if wynik == liczba - 1:
                 break
         else:
             return False
-
     return True
 
 
-def generuj_liczbe_pierwsza(liczba_bitow: int) -> int:
-    """Generuje nieparzystą liczbę pierwszą o zadanej długości bitowej."""
-    if liczba_bitow < 2:
-        raise ValueError("Liczba bitów musi wynosić co najmniej 2.")
-
+def generuj_liczbe_pierwsza(liczba_bitow):
     while True:
         kandydat = secrets.randbits(liczba_bitow)
-        kandydat |= (1 << (liczba_bitow - 1)) | 1
+        kandydat |= (1 << (liczba_bitow - 1)) | 1 #dwa bity ustawione na 1, aby zapewnić odpowiednią długość i nieparzystość
         if czy_prawdopodobnie_pierwsza(kandydat):
             return kandydat
 
@@ -212,11 +202,6 @@ def main() -> None:
     pokaz_falszerstwo_egzystencjalne(klucz_publiczny)
     pokaz_podatnosc_homomorficzna(klucz_publiczny, klucz_prywatny)
     pokaz_podpisywanie_skrotu(klucz_publiczny, klucz_prywatny)
-
-    print(
-        "\nUwaga: to edukacyjna demonstracja surowego RSA, "
-        "a nie implementacja do zastosowań produkcyjnych."
-    )
 
 
 if __name__ == "__main__":
