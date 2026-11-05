@@ -1,7 +1,7 @@
 import secrets
 
 
-# Krzywa y^2 = x^3 + ax + b (mod p); małe parametry są tylko do demonstracji.
+# Krzywa y^2 = x^3 + ax + b (mod p);
 p, a, b = 97, 2, 3
 G = (3, 6)
 

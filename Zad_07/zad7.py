@@ -37,6 +37,16 @@ def generuj_klucze():
             return n, e, pow(e, -1, phi)
 
 
+def podpisz_skrot(wiadomosc, n, d):
+    skrot = int.from_bytes(hashlib.sha256(wiadomosc).digest(), "big")
+    return pow(skrot, d, n)
+
+
+def sprawdz_podpis(podpis, wiadomosc, n, e):
+    skrot = int.from_bytes(hashlib.sha256(wiadomosc).digest(), "big")
+    return pow(podpis, e, n) == skrot
+
+
 def main():
     # Krótka demonstracja używa surowego RSA, bez bezpiecznego paddingu.
     n, e, d = generuj_klucze()
@@ -57,18 +67,18 @@ def main():
     print("Połączone podpisy potwierdzają 6:",
           pow(podpis_iloczynu, e, n) == 6)
 
-    # W praktyce podpisuje się skrót wiadomości, a nie jej surową treść.
-    skrot = int.from_bytes(hashlib.sha256(wiadomosc).digest(), "big")
-    podpis_skrotu = pow(skrot, d, n)
-    zmieniony_skrot = int.from_bytes(
-        hashlib.sha256(b"Inna wiadomosc").digest(), "big"
-    )
-    print("Podpis SHA-256 jest poprawny:",
-          pow(podpis_skrotu, e, n) == skrot)
+    podpis = podpisz_skrot(wiadomosc, n, d)
+    print("\nPodpis skrótu SHA-256 jest poprawny:",
+          sprawdz_podpis(podpis, wiadomosc, n, e))
     print("Podpis nie pasuje do zmienionej wiadomości:",
-          pow(podpis_skrotu, e, n) != zmieniony_skrot)
+          not sprawdz_podpis(podpis, b"Inna wiadomosc", n, e))
 
-    print("Uwaga: demonstracja używa niebezpiecznego, surowego RSA.")
+    # Próba ataku homomorficznego na podpisach skrótów wiadomości 2 i 3.
+    podpis_2 = podpisz_skrot(b"2", n, d)
+    podpis_3 = podpisz_skrot(b"3", n, d)
+    polaczony_podpis = podpis_2 * podpis_3 % n
+    print("Połączone podpisy potwierdzają wiadomość 6:",
+          sprawdz_podpis(polaczony_podpis, b"6", n, e))
 
 
 if __name__ == "__main__":
