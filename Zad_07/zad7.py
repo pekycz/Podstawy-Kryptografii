@@ -36,7 +36,7 @@ def generuj_klucze():
         if n.bit_length() == 1024 and math.gcd(e, phi) == 1:
             return n, e, pow(e, -1, phi)
 
-
+# 4
 def podpisz_skrot(wiadomosc, n, d):
     skrot = int.from_bytes(hashlib.sha256(wiadomosc).digest(), "big")
     return pow(skrot, d, n)
@@ -67,17 +67,18 @@ def main():
     print("Połączone podpisy potwierdzają 6:",
           pow(podpis_iloczynu, e, n) == 6)
 
+# 4
     podpis = podpisz_skrot(wiadomosc, n, d)
     print("\nPodpis skrótu SHA-256 jest poprawny:",
           sprawdz_podpis(podpis, wiadomosc, n, e))
-    print("Podpis nie pasuje do zmienionej wiadomości:",
+    print("Nie pasuje do zmienionej wiadomości:",
           not sprawdz_podpis(podpis, b"Inna wiadomosc", n, e))
 
-    # Próba ataku homomorficznego na podpisach skrótów wiadomości 2 i 3.
+# atak homomorficzny na podpisy skrótów
     podpis_2 = podpisz_skrot(b"2", n, d)
     podpis_3 = podpisz_skrot(b"3", n, d)
     polaczony_podpis = podpis_2 * podpis_3 % n
-    print("Połączone podpisy potwierdzają wiadomość 6:",
+    print("wiadomość 6:",
           sprawdz_podpis(polaczony_podpis, b"6", n, e))
 
 
